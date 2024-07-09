@@ -1,0 +1,107 @@
+{
+  "name": "TestDB",
+  "description": "",
+  "version": 4,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "16a8a673",
+    "title": null,
+    "description": null,
+    "keyword": "trigger",
+    "input": {
+    },
+    "block": [
+      {
+        "number": 1,
+        "provider": "workato_app",
+        "name": "get_recipe",
+        "as": "dc53b267",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "recipe_id": "TestDB"
+        },
+        "toggleCfg": {
+          "recipe_id": true
+        },
+        "input": {
+          "recipe_id": [
+            {
+              "zip_name": "testdb.recipe.json",
+              "name": "TestDB",
+              "folder": ""
+            }
+          ]
+        },
+        "uuid": "c1e4eb3b-3bb0-4cf8-ba7a-378ea8371622"
+      },
+      {
+        "number": 2,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "677c2565",
+        "title": null,
+        "description": "Log <span class=\"provider\">message</span> to <span class=\"provider\">Job report</span>",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": "false",
+          "message": "Test"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "                Send a copy of the message to Workato logs.\n                <a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n                  Learn more\n                </a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "a4179dbc-96cf-43b8-a4a6-6a6563c15ccd"
+      },
+      {
+        "number": 3,
+        "provider": "workato_recipe_function",
+        "name": "return_result",
+        "as": "62b0112f",
+        "keyword": "action",
+        "input": {
+        },
+        "uuid": "e8be6359-d174-4b7f-a5ec-74643e6db509"
+      }
+    ],
+    "uuid": "f85e4755-fa23-4d20-a114-ae855bae68c8",
+    "unfinished": false
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Connections/bpo_con_recipeops.connection.json",
+        "name": "BPO | CON | RecipeOps",
+        "folder": "Connections"
+      },
+      "personalization": true
+    }
+  ]
+}
