@@ -1,0 +1,1351 @@
+{
+  "name": "Copy of AOF | FUNC | Job Recovery",
+  "description": "When there is a new call for callable recipe, do action",
+  "version": 1,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "80ab9faf",
+    "title": null,
+    "description": null,
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+    },
+    "toggleCfg": {
+    },
+    "input": {
+      "parameters_schema_json": "[{\"properties\":[{\"properties\":[{\"control_type\":\"text\",\"label\":\"Identifier\",\"name\":\"identifier\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Transaction type\",\"name\":\"transactionType\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Transaction description\",\"name\":\"transactionDescription\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Job ID\",\"name\":\"jobID\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Recipe ID\",\"name\":\"recipeID\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Job Created At\",\"name\":\"jobCreatedAt\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Folder\",\"name\":\"recipeFolder\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Last modified by\",\"name\":\"lastModifiedBy\",\"type\":\"string\",\"optional\":false}],\"label\":\"Job Details\",\"name\":\"jobDetails\",\"type\":\"object\",\"optional\":false},{\"properties\":[{\"control_type\":\"text\",\"label\":\"Recovery type\",\"name\":\"recoveryType\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Recovery delay\",\"name\":\"recoveryDelay\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Parent job ID\",\"name\":\"parentJobID\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Max recovery count\",\"name\":\"maxRecoveryCount\",\"type\":\"string\",\"optional\":true}],\"label\":\"Error\",\"name\":\"recovery\",\"type\":\"object\",\"of\":\"object\",\"optional\":false}],\"label\":\"Message\",\"name\":\"message\",\"type\":\"object\",\"of\":\"object\",\"optional\":false}]"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Parameters",
+        "name": "parameters",
+        "properties": [
+          {
+            "properties": [
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Identifier",
+                    "name": "identifier",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Transaction type",
+                    "name": "transactionType",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Transaction description",
+                    "name": "transactionDescription",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job ID",
+                    "name": "jobID",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "name": "recipeID",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job Created At",
+                    "name": "jobCreatedAt",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Folder",
+                    "name": "recipeFolder",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last modified by",
+                    "name": "lastModifiedBy",
+                    "type": "string",
+                    "optional": false
+                  }
+                ],
+                "label": "Job Details",
+                "name": "jobDetails",
+                "type": "object",
+                "optional": false
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recovery type",
+                    "name": "recoveryType",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recovery delay",
+                    "name": "recoveryDelay",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Parent job ID",
+                    "name": "parentJobID",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Max recovery count",
+                    "name": "maxRecoveryCount",
+                    "type": "string",
+                    "optional": true
+                  }
+                ],
+                "label": "Error",
+                "name": "recovery",
+                "type": "object",
+                "of": "object",
+                "optional": false
+              }
+            ],
+            "label": "Message",
+            "name": "message",
+            "type": "object",
+            "of": "object",
+            "optional": false
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "workato_variable",
+        "name": "declare_variable",
+        "as": "722f5873",
+        "title": "  Create variable Rerun_count",
+        "description": "Create variable <span class=\"provider\">Rerun_count</span>",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+          "type": "integer",
+          "name": "Rerun_count",
+          "value": "1"
+        },
+        "extended_output_schema": [
+          {
+            "control_type": "integer",
+            "label": "Rerun_count",
+            "name": "value",
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "control_type": "integer",
+            "hint": "Default value for the variable",
+            "label": "Default value",
+            "name": "value",
+            "optional": true,
+            "parse_output": "integer_conversion",
+            "sticky": true,
+            "type": "integer",
+            "strip_interpolation": true
+          }
+        ],
+        "uuid": "565bb36b-0dad-49e1-bfe9-21f4c0dab25d"
+      },
+      {
+        "number": 2,
+        "keyword": "if",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+          "type": "compound",
+          "operand": "and",
+          "conditions": [
+            {
+              "operand": "present",
+              "lhs": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.parentJobID')}",
+              "rhs": "0",
+              "uuid": "condition-9bce1241-4b16-45fa-ac2b-47b47a48d6ad"
+            }
+          ]
+        },
+        "block": [
+          {
+            "number": 3,
+            "provider": "lookup_table",
+            "name": "search_entries",
+            "as": "8144d756",
+            "title": null,
+            "description": "\n      Search\n      <span class=\"provider\">entries</span>\n      in\n      <span class=\"provider\">AOF | LT-003 | Rerun logs</span>\n      lookup table\n    ",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+              "lookup_table_id": "Rerun logs"
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "lookup_table_id": {
+                "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+                "name": "AOF | LT-003 | Rerun logs",
+                "folder": ""
+              },
+              "parameters": {
+                "col3": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.parentJobID')}",
+                "col1": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.recipeID')}"
+              }
+            },
+            "extended_output_schema": [
+              {
+                "label": "Entries",
+                "name": "entries",
+                "of": "object",
+                "properties": [
+                  {
+                    "control_type": "number",
+                    "label": "Entry ID",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "id"
+                  },
+                  {
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "RecipeID",
+                        "name": "col1",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Parent JobID",
+                        "name": "col2",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error JobID",
+                        "name": "col3",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RunCount",
+                        "name": "col4",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LastRerunAt",
+                        "name": "col5",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Max rerun reached?",
+                        "name": "col6",
+                        "type": "string",
+                        "sticky": true
+                      }
+                    ],
+                    "label": "Entry",
+                    "type": "object",
+                    "name": "entry"
+                  }
+                ],
+                "type": "array"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "hint": "Provide one or more entry fields to search the entry",
+                "label": "Search by",
+                "name": "parameters",
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "RecipeID",
+                    "name": "col1",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Parent JobID",
+                    "name": "col2",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error JobID",
+                    "name": "col3",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "RunCount",
+                    "name": "col4",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "LastRerunAt",
+                    "name": "col5",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Max rerun reached?",
+                    "name": "col6",
+                    "type": "string",
+                    "sticky": true,
+                    "optional": true
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "uuid": "3dcb9d16-c95e-4704-b8e8-ab80b0ed381f"
+          },
+          {
+            "number": 4,
+            "keyword": "if",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "equals_to",
+                  "lhs": "#{_('data.lookup_table.8144d756.entries.first.____Size', 'list_meta', '____Size', 'data.lookup_table.8144d756.entries')}",
+                  "rhs": "0",
+                  "uuid": "condition-82e8a26b-7eba-4016-9e7d-3f4d74f4a183"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 5,
+                "keyword": "stop",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "stop_with_error": "true",
+                  "stop_reason": "lookup search failed"
+                },
+                "uuid": "b34b1be6-bf88-4020-ac45-96e89d8af6e3"
+              }
+            ],
+            "uuid": "0315b9cc-ccc9-4de8-8276-2231e7f134da"
+          },
+          {
+            "number": 6,
+            "provider": "workato_variable",
+            "name": "update_variable",
+            "as": "1bbc229e",
+            "title": null,
+            "description": "Update variable <span class=\"provider\">Rerun_count</span>",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+              "name": "Rerun_count (step 3)"
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "name": "565bb36b-0dad-49e1-bfe9-21f4c0dab25d:722f5873",
+              "value": "=_('data.lookup_table.8144d756.entries.first.entry.col4').to_i + 1"
+            },
+            "extended_input_schema": [
+              {
+                "control_type": "integer",
+                "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                "label": "Value",
+                "name": "value",
+                "optional": true,
+                "parse_output": "integer_conversion",
+                "sticky": true,
+                "type": "integer",
+                "strip_interpolation": true
+              }
+            ],
+            "uuid": "9494f34d-0a4e-40f3-a79a-e9f5b65d1db2",
+            "skip": false
+          }
+        ],
+        "uuid": "80519beb-624b-4590-99c4-39b08e608030"
+      },
+      {
+        "number": 7,
+        "keyword": "try",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+        },
+        "block": [
+          {
+            "number": 8,
+            "keyword": "if",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "less_than",
+                  "lhs": "#{_('data.workato_variable.722f5873.value')}",
+                  "rhs": "=_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.maxRecoveryCount').to_i + 1",
+                  "uuid": "condition-b7e5027b-6dbb-4a3e-8fa1-432d408a21e5"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 9,
+                "keyword": "if",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "type": "compound",
+                  "operand": "and",
+                  "conditions": [
+                    {
+                      "operand": "present",
+                      "lhs": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.recoveryDelay')}",
+                      "rhs": null,
+                      "uuid": "condition-62952936-0747-431c-b376-d566ebb72a43"
+                    }
+                  ]
+                },
+                "block": [
+                  {
+                    "number": 10,
+                    "provider": "workato_variable",
+                    "name": "declare_variable",
+                    "as": "97980ed5",
+                    "title": "  Create variable delay_in_seconds",
+                    "description": "Create variable <span class=\"provider\">delay_in_seconds</span>",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "type": "integer",
+                      "name": "delay_in_seconds",
+                      "value": "=_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.recoveryDelay').to_i"
+                    },
+                    "extended_output_schema": [
+                      {
+                        "control_type": "integer",
+                        "label": "delay_in_seconds",
+                        "name": "value",
+                        "parse_output": "integer_conversion",
+                        "type": "integer"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "control_type": "integer",
+                        "hint": "Default value for the variable",
+                        "label": "Default value",
+                        "name": "value",
+                        "optional": true,
+                        "parse_output": "integer_conversion",
+                        "sticky": true,
+                        "type": "integer",
+                        "strip_interpolation": true
+                      }
+                    ],
+                    "uuid": "b99b39b8-39dd-4fa0-9d40-b1c9140458d7"
+                  },
+                  {
+                    "number": 11,
+                    "provider": "clock",
+                    "name": "wait_for_interval",
+                    "as": "9dd7f0c1",
+                    "title": null,
+                    "description": null,
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                      "interval": false
+                    },
+                    "input": {
+                      "interval": "#{_('data.workato_variable.97980ed5.value')}"
+                    },
+                    "comment": "Wait for specified delay",
+                    "uuid": "d0530e28-bf94-46f9-9dcc-404dd5712e39"
+                  }
+                ],
+                "uuid": "0bc8d9ec-0b8e-4197-905f-23701a3747d0"
+              },
+              {
+                "number": 12,
+                "provider": "workato_app",
+                "name": "rerun_jobs",
+                "as": "b0622d10",
+                "title": null,
+                "description": null,
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                  "recipe_id": false
+                },
+                "input": {
+                  "recipe_id": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.recipeID')}",
+                  "jobs": {
+                    "job_id": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.jobID')}"
+                  }
+                },
+                "comment": "Rerun the  job after  the wait  time",
+                "uuid": "4fe53b9c-ed40-4810-8ff2-3dcd57ac78c7"
+              },
+              {
+                "number": 13,
+                "provider": "lookup_table",
+                "name": "add_entry",
+                "as": "e3034543",
+                "title": null,
+                "description": "\n      Add\n      <span class=\"provider\">entry</span>\n      to\n      <span class=\"provider\">AOF | LT-003 | Rerun logs</span>\n      lookup table\n    ",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "lookup_table_id": "Rerun logs"
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "lookup_table_id": {
+                    "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+                    "name": "AOF | LT-003 | Rerun logs",
+                    "folder": ""
+                  },
+                  "parameters": {
+                    "col3": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.jobID')}",
+                    "col4": "#{_('data.workato_variable.722f5873.value')}",
+                    "col1": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.recipeID')}",
+                    "col2": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.parentJobID')}",
+                    "col5": "=now"
+                  }
+                },
+                "extended_output_schema": [
+                  {
+                    "control_type": "number",
+                    "label": "Entry ID",
+                    "name": "id",
+                    "parse_output": "integer_conversion",
+                    "type": "integer"
+                  },
+                  {
+                    "label": "Entry",
+                    "name": "entry",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "RecipeID",
+                        "name": "col1",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Parent JobID",
+                        "name": "col2",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error JobID",
+                        "name": "col3",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RunCount",
+                        "name": "col4",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LastRerunAt",
+                        "name": "col5",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Max rerun reached?",
+                        "name": "col6",
+                        "type": "string",
+                        "sticky": true
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "extended_input_schema": [
+                  {
+                    "hint": "Fill the fields for the new entry",
+                    "label": "Entry fields",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "RecipeID",
+                        "name": "col1",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Parent JobID",
+                        "name": "col2",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error JobID",
+                        "name": "col3",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RunCount",
+                        "name": "col4",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LastRerunAt",
+                        "name": "col5",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Max rerun reached?",
+                        "name": "col6",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "comment": "Update the Lookup table with Parent Job ID and other details",
+                "uuid": "32707e3d-2a4c-4612-ae07-d24b4f6c638d"
+              },
+              {
+                "number": 14,
+                "keyword": "else",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                },
+                "block": [
+                  {
+                    "number": 15,
+                    "provider": "lookup_table",
+                    "name": "search_entries",
+                    "as": "ae1395b4",
+                    "title": null,
+                    "description": "\n      Search\n      <span class=\"provider\">entries</span>\n      in\n      <span class=\"provider\">AOF | LT-003 | Rerun logs</span>\n      lookup table\n    ",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "lookup_table_id": "Rerun logs"
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "lookup_table_id": {
+                        "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+                        "name": "AOF | LT-003 | Rerun logs",
+                        "folder": ""
+                      },
+                      "parameters": {
+                        "col3": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.recovery.parentJobID')}"
+                      }
+                    },
+                    "extended_output_schema": [
+                      {
+                        "label": "Entries",
+                        "name": "entries",
+                        "of": "object",
+                        "properties": [
+                          {
+                            "control_type": "number",
+                            "label": "Entry ID",
+                            "parse_output": "integer_conversion",
+                            "type": "integer",
+                            "name": "id"
+                          },
+                          {
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "RecipeID",
+                                "name": "col1",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Parent JobID",
+                                "name": "col2",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error JobID",
+                                "name": "col3",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "RunCount",
+                                "name": "col4",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "LastRerunAt",
+                                "name": "col5",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Max rerun reached?",
+                                "name": "col6",
+                                "type": "string",
+                                "sticky": true
+                              }
+                            ],
+                            "label": "Entry",
+                            "type": "object",
+                            "name": "entry"
+                          }
+                        ],
+                        "type": "array"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "hint": "Provide one or more entry fields to search the entry",
+                        "label": "Search by",
+                        "name": "parameters",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "RecipeID",
+                            "name": "col1",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Parent JobID",
+                            "name": "col2",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error JobID",
+                            "name": "col3",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "RunCount",
+                            "name": "col4",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "LastRerunAt",
+                            "name": "col5",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Max rerun reached?",
+                            "name": "col6",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "b63d369a-10b6-474f-92a7-27fc90796fbd"
+                  },
+                  {
+                    "number": 16,
+                    "keyword": "if",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "type": "compound",
+                      "operand": "and",
+                      "conditions": [
+                        {
+                          "operand": "equals_to",
+                          "lhs": "#{_('data.lookup_table.ae1395b4.entries.first.____Size', 'list_meta', '____Size', 'data.lookup_table.ae1395b4.entries')}",
+                          "rhs": "1",
+                          "uuid": "condition-3ef35f09-6a21-4a3c-8388-e1df962ee079"
+                        }
+                      ]
+                    },
+                    "block": [
+                      {
+                        "number": 17,
+                        "provider": "lookup_table",
+                        "name": "update_entry",
+                        "as": "38c99229",
+                        "title": null,
+                        "description": "\n      Update\n      <span class=\"provider\">entry</span>\n      in\n      <span class=\"provider\">AOF | LT-003 | Rerun logs</span>\n      lookup table\n    ",
+                        "keyword": "action",
+                        "dynamicPickListSelection": {
+                          "lookup_table_id": "Rerun logs"
+                        },
+                        "toggleCfg": {
+                          "ignore_not_found": true
+                        },
+                        "input": {
+                          "ignore_not_found": "false",
+                          "id": "#{_('data.lookup_table.ae1395b4.entries.first.id')}",
+                          "lookup_table_id": {
+                            "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+                            "name": "AOF | LT-003 | Rerun logs",
+                            "folder": ""
+                          },
+                          "parameters": {
+                            "col6": "Yes"
+                          }
+                        },
+                        "extended_output_schema": [
+                          {
+                            "control_type": "number",
+                            "label": "Entry ID",
+                            "name": "id",
+                            "parse_output": "integer_conversion",
+                            "type": "integer"
+                          },
+                          {
+                            "label": "Entry",
+                            "name": "entry",
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "RecipeID",
+                                "name": "col1",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Parent JobID",
+                                "name": "col2",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error JobID",
+                                "name": "col3",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "RunCount",
+                                "name": "col4",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "LastRerunAt",
+                                "name": "col5",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Max rerun reached?",
+                                "name": "col6",
+                                "type": "string",
+                                "sticky": true
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "extended_input_schema": [
+                          {
+                            "hint": "Fill the fields you want to update",
+                            "label": "Entry fields",
+                            "name": "parameters",
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "RecipeID",
+                                "name": "col1",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Parent JobID",
+                                "name": "col2",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error JobID",
+                                "name": "col3",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "RunCount",
+                                "name": "col4",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "LastRerunAt",
+                                "name": "col5",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Max rerun reached?",
+                                "name": "col6",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "uuid": "b5cda7dc-2ae8-4151-96f7-e39b0a28fb6a"
+                      }
+                    ],
+                    "uuid": "2ac35bfc-e7b1-4741-82a8-e6e05ce0f566"
+                  }
+                ],
+                "uuid": "41b6f717-0204-48b2-a181-6a98887a9ade"
+              }
+            ],
+            "comment": "Check if the max recovery reached",
+            "uuid": "db8ccc21-9005-4354-8110-3728ec4b8876"
+          },
+          {
+            "number": 18,
+            "as": "ee86849e",
+            "keyword": "catch",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 19,
+                "provider": "workato_recipe_function",
+                "name": "call_recipe_async",
+                "as": "c87916e5",
+                "title": null,
+                "description": "Call <span class=\"provider\">AOF | FUNC | Super Admin Error Handling</span> (async)",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "flow_id": "AOF | FUNC | Super Admin Error Handling"
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "flow_id": {
+                    "zip_name": "Recipes/aof_func_super_admin_error_handling.recipe.json",
+                    "name": "AOF | FUNC | Super Admin Error Handling",
+                    "folder": "Recipes",
+                    "folder_full_path": "Home/Autonomous Operations Framework/Recipes"
+                  },
+                  "parameters": {
+                    "jobDetails": {
+                      "identifier": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.identifier')}",
+                      "transactionType": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.transactionType')}",
+                      "transactionDescription": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.transactionDescription')}",
+                      "jobID": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.jobID')}",
+                      "recipeID": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.recipeID')}",
+                      "jobCreatedAt": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.jobCreatedAt')}",
+                      "recipeFolder": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.recipeFolder')}",
+                      "lastModifiedBy": "#{_('data.workato_recipe_function.80ab9faf.parameters.message.jobDetails.lastModifiedBy')}"
+                    },
+                    "administrationError": "#{_('data.catch.ee86849e.message')}",
+                    "rawAdministrationError": "#{_('data.catch.ee86849e.type')}:#{_('data.catch.ee86849e.message')}"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Parameters",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Identifier",
+                            "name": "identifier",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction type",
+                            "name": "transactionType",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction description",
+                            "name": "transactionDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job ID",
+                            "name": "jobID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe ID",
+                            "name": "recipeID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe URL",
+                            "name": "recipeURL",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe name",
+                            "name": "recipeName",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Created At",
+                            "name": "jobCreatedAt",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Folder",
+                            "name": "recipeFolder",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last modified by",
+                            "name": "lastModifiedBy",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Job Details",
+                        "name": "jobDetails",
+                        "type": "object",
+                        "optional": false
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Error code",
+                            "name": "errorCode",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error message",
+                            "name": "errorMessage",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error description",
+                            "name": "errorDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Severity level",
+                            "name": "severityLevel",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Data flow",
+                            "name": "dataFlow",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Stack trace",
+                            "hint": "Raw error message",
+                            "name": "stackTrace",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Original error",
+                        "name": "originalError",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Type",
+                            "name": "type",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Receiver",
+                            "name": "receiver",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Notification",
+                        "name": "notification",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Administration error",
+                        "name": "administrationError",
+                        "type": "string",
+                        "optional": false
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Raw administration error",
+                        "name": "rawAdministrationError",
+                        "type": "string",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "flow_id",
+                  "parameters.originalError.errorMessage",
+                  "parameters.jobDetails.transactionType",
+                  "parameters.jobDetails.transactionDescription",
+                  "parameters.jobDetails.jobID",
+                  "parameters.jobDetails.recipeID",
+                  "parameters.jobDetails.recipeURL",
+                  "parameters.jobDetails.recipeName",
+                  "parameters.jobDetails.jobCreatedAt",
+                  "parameters.jobDetails.recipeFolder",
+                  "parameters.jobDetails.lastModifiedBy",
+                  "parameters.originalError.errorCode",
+                  "parameters.originalError.errorDescription",
+                  "parameters.originalError.severityLevel",
+                  "parameters.originalError.dataFlow",
+                  "parameters.originalError.stackTrace",
+                  "parameters.notification.type",
+                  "parameters.notification.receiver"
+                ],
+                "comment": "unable to rerun: send email recipe",
+                "uuid": "d8e8768a-d8f7-4359-92a2-5a05c10b0303"
+              }
+            ],
+            "uuid": "c853e910-119e-421a-b9c0-2a95b4c92afc"
+          }
+        ],
+        "uuid": "15caf0f9-1f31-47cf-8b68-2d8ad9d92b7e"
+      }
+    ],
+    "job_report_schema": [
+      {
+        "name": "custom_column_1",
+        "label": "Identifier"
+      },
+      {
+        "name": "custom_column_2",
+        "label": "Job ID"
+      },
+      {
+        "name": "custom_column_3",
+        "label": "Recovery Wait Time"
+      }
+    ],
+    "job_report_config": {
+      "custom_column_1": "#{_('data.workato_service.3b4dc5ea.request.message.jobDetails.identifier')}",
+      "custom_column_2": "#{_('data.workato_service.3b4dc5ea.request.message.jobDetails.jobID')}",
+      "custom_column_3": "#{_('data.workato_variable.97980ed5.value')}"
+    },
+    "uuid": "44dfb1b5-1206-4a77-a126-9a83f38cdc59"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Connections/aof_con_recipeops_workato_accelerators_ahq.connection.json",
+        "name": "AOF | CON | RecipeOps (Workato Accelerators AHQ)",
+        "folder": "Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}
